@@ -1,0 +1,78 @@
+{
+ "read_on": "2026-10-18",
+ "statewide": {
+  "notice": "Valuation notices go out in March (Anoka: on or before April 1).",
+  "local_window": "Local Boards of Appeal and Equalization and Open Book meetings run April 1 to May 31. In a city with its own Local Board you must appear there (in person, by letter, or through someone you name) to keep the right to the County Board.",
+  "county_board": "County Boards of Appeal and Equalization meet in June; most need a call or email to get on the agenda by mid-May.",
+  "tax_court": "A Minnesota Tax Court petition can be filed any time after the notice and no later than April 30 of the year the taxes are payable. Homesteads can use the Small Claims Division.",
+  "next": {
+   "assessment_year": 2027,
+   "notices": "March 2027",
+   "local_boards": "April 1 to May 31, 2027",
+   "county_boards": "June 2027",
+   "tax_court_for_2026_value": "April 30, 2027",
+   "tax_court_for_2025_value": "closed April 30, 2026"
+  },
+  "sources": [
+   {"url": "https://www.anokacountymn.gov/4279/How-to-Appeal-Your-Value", "read_on": "2026-10-18", "says": "Notices mailed on or before April 1; LBAE/Open Book by city, then CBAE in June; Tax Court petition before April 30 of the year taxes are payable (2025 assessment -> April 30, 2026)."},
+   {"url": "https://www.washingtoncountymn.gov/3076/Appealing-Your-Property-Value", "read_on": "2026-10-18", "says": "Each March a valuation notice; LBAE meetings scheduled between April 1 and May 31; CBAE in June; Tax Court on or before April 30 of the year the taxes are due."},
+   {"url": "https://www.scottcountymn.gov/358/Assessors-Timeline", "read_on": "2026-10-18", "says": "March: valuation notices mailed; March-May: appeals; April 30: MN Tax Court filing deadline; June: Board of Appeal meets."}
+  ]
+ },
+ "counties": {
+  "ramsey": {
+   "name": "Ramsey County",
+   "assessor_phone": "651-266-2131",
+   "url": "https://www.ramseycountymn.gov/residents/property-home/taxes-values/property-value/appealing-your-value",
+   "steps": ["Call the Assessor's Office first (651-266-2131) to talk through the value.", "Open book meeting (Saint Paul and most suburbs), or your city's Local Board of Appeal and Equalization.", "County Board of Appeal and Equalization, in June.", "Minnesota Tax Court by April 30 of the year the taxes are payable."],
+   "last_cycle": "2026: notices mailed mid-March; county open book meeting April 9, 2026.",
+   "last_cycle_source": "https://www.facebook.com/RamseyCountyMinnesota/posts/have-questions-about-your-property-value-start-with-a-phone-call-to-the-assessor/1357669043063006/",
+   "read_on": "2026-10-18"
+  },
+  "anoka": {
+   "name": "Anoka County",
+   "assessor_phone": "763-323-5400",
+   "url": "https://www.anokacountymn.gov/4279/How-to-Appeal-Your-Value",
+   "steps": ["Valuation notices are mailed on or before April 1.", "Open Book or your city's Local Board of Appeal & Equalization (LBAE). In an LBAE city you must appeal there first to go on to the county board.", "County Board of Appeal & Equalization (CBAE), in June.", "Minnesota Tax Court petition before April 30 of the year taxes are payable."],
+   "last_cycle": "2026 notices: the county's sales tool showed qualified sales from Oct 1, 2024 to Sep 30, 2025.",
+   "last_cycle_source": "https://www.anokacountymn.gov/4279/How-to-Appeal-Your-Value",
+   "read_on": "2026-10-18"
+  },
+  "dakota": {
+   "name": "Dakota County",
+   "assessor_phone": "651-438-4200",
+   "url": "https://dakotacountymn.gov/residents/home-property/appeal-property-value",
+   "steps": ["Appeal option review period with Assessing Services after the notice (2026: March 11 to May 1).", "Special County Board of Appeal and Equalization in June (2026: June 8). After it adjourns the county cannot change that year's value.", "Minnesota Tax Court petition, deadline April 30 of the year taxes are payable."],
+   "last_cycle": "2026: review period March 11 to May 1, 2026; Special County Board met June 8, 2026.",
+   "last_cycle_source": "https://dakotacountymn.gov/residents/home-property/appeal-property-value",
+   "read_on": "2026-10-18"
+  },
+  "scott": {
+   "name": "Scott County",
+   "assessor_phone": "952-496-8150",
+   "url": "https://www.scottcountymn.gov/358/Assessors-Timeline",
+   "steps": ["March: valuation notices mailed.", "March to May: Open Book or your city's Local Board of Appeal and Equalization.", "June: County Board of Appeal & Equalization.", "April 30: Minnesota Tax Court filing deadline (year taxes are payable)."],
+   "last_cycle": "County timeline page, 2026 cycle.",
+   "last_cycle_source": "https://www.scottcountymn.gov/358/Assessors-Timeline",
+   "read_on": "2026-10-18"
+  },
+  "washington": {
+   "name": "Washington County",
+   "assessor_phone": "651-430-6175",
+   "url": "https://www.washingtoncountymn.gov/3076/Appealing-Your-Property-Value",
+   "steps": ["Contact your appraiser before any meeting.", "Local Board of Appeal and Equalization in your city (April), or one of four regional Open Book meetings (April).", "County Board of Appeal and Equalization in June; call 651-430-6175 by about May 1 for an appointment.", "Minnesota Tax Court on or before April 30 of the year the taxes are due."],
+   "last_cycle": "2026: local boards April 1 to 30; open book April 3 to 23; call by May 1, 2026; County Board June 17, 2026 at 5 p.m., Stillwater.",
+   "last_cycle_source": "https://www.washingtoncountymn.gov/3076/Appealing-Your-Property-Value",
+   "read_on": "2026-10-18"
+  },
+  "hennepin": {
+   "name": "Hennepin County (Minneapolis)",
+   "assessor_phone": "612-348-7050",
+   "url": "https://www.minneapolismn.gov/resident-services/property-housing/property-values-taxes/market-value/appeal/",
+   "steps": ["Talk to the Minneapolis assessor's office first.", "Minneapolis Local Board of Appeal and Equalization (LBAE), spring.", "Hennepin County Board of Appeal and Equalization in June; book by phone (612-348-7050) or countyvalueappeal@hennepin.us by about May 20.", "Minnesota Tax Court by April 30 of the year the taxes are payable."],
+   "last_cycle": "2026: Hennepin County Board appointments by May 20, 2026; County Board began June 15, 2026.",
+   "last_cycle_source": "https://www.bloomingtonmn.gov/as/appealing-your-property-assessment",
+   "read_on": "2026-10-18"
+  }
+ }
+}
