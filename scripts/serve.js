@@ -2,7 +2,7 @@
 // private/bundle/ mounted where /api/data expects it.  node scripts/serve.js [port]
 // Needs .access_secret; STRIPE_SECRET_KEY only for the checkout/status routes.
 const http = require("http"), fs = require("fs"), path = require("path"), url = require("url");
-const root = path.resolve(__dirname, "..", "site");
+const root = path.resolve(__dirname, "..", "site", "public");
 process.env.ACCESS_SECRET ||= fs.readFileSync(path.resolve(__dirname, "..", ".access_secret"), "utf8").trim();
 process.env.FULL_DIR ||= path.resolve(__dirname, "..", "private/bundle/comps");
 process.env.SITE_URL ||= "http://localhost:" + (+process.argv[2] || 4321);
@@ -11,7 +11,7 @@ const types = { ".html": "text/html", ".js": "text/javascript", ".json": "applic
 http.createServer(async (req, res) => {
   const u = url.parse(req.url, true);
   if (u.pathname.startsWith("/api/")) {
-    const f = path.join(root, "api", path.basename(u.pathname) + ".js");
+    const f = path.join(root, "..", "api", path.basename(u.pathname) + ".js");
     if (!fs.existsSync(f) || path.basename(u.pathname).startsWith("_")) { res.writeHead(404); return res.end(); }
     let body = ""; for await (const c of req) body += c;
     req.query = u.query; try { req.body = body ? JSON.parse(body) : {}; } catch { req.body = {}; }

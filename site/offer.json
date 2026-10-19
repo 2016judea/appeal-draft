@@ -2,7 +2,7 @@
  "product": "appeal-draft",
  "name": "Appeal Draft",
  "site": "https://appeal-draft.vercel.app",
- "price_usd": 40,
+ "price_usd": 90,
  "checkout_line": "Every comparable sale behind your number, the one-page appeal with your county's fields and dates, and the PDF. One home, once.",
  "stripe_pk": "pk_live_51TUvvcBzD4mN8eOD28H6oQkFwFHwF1SLtWxN1vHRmnSxntWFefgd33mEIVmjv8ekxWgkZft3OpPlzmVXMIeHPBwj003998hjTf"
 }

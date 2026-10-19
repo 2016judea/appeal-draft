@@ -4,13 +4,13 @@
   python3 scripts/build.py [--db PATH] [--out DIR] [--county ramsey,...] [--sample N]
 
 Writes
-  site/data/zip/<zip>.json       the FREE slice: one row per home (assessor value, prior value,
+  site/public/data/zip/<zip>.json       the FREE slice: one row per home (assessor value, prior value,
                                  tax, sqft, built, the comp-based target, ONE comp) + the zip's
                                  sale $/sqft median
   private/bundle/comps/<zip>.json.gz   the PAID slice: every home's full comp set, as indices into
                                  the zip file's sales table; served only by /api/data
-  site/data/meta.json            counts, build date, spread (every number the page quotes)
-  site/data/example.json         the home the page opens on
+  site/public/data/meta.json            counts, build date, spread (every number the page quotes)
+  site/public/data/example.json         the home the page opens on
 
 The rule for what counts as a comp lives in scripts/model.py; DATA_MODEL.md says why.
 """
@@ -124,7 +124,7 @@ def tidy_addr(house, street, city):
 
 def build(db, out, counties, sample, today):
     con = duckdb.connect(str(db), read_only=True)
-    zip_dir = out / "site/data/zip"; zip_dir.mkdir(parents=True, exist_ok=True)
+    zip_dir = out / "site/public/data/zip"; zip_dir.mkdir(parents=True, exist_ok=True)
     bundle = out / "private/bundle/comps"; bundle.mkdir(parents=True, exist_ok=True)
     for old in list(zip_dir.glob("*.json")) + list(bundle.glob("*.json.gz")):
         old.unlink()
@@ -161,7 +161,8 @@ def build(db, out, counties, sample, today):
         sale_row = []
         for i in range(len(S["parcel_key"])):
             a, c = tidy_addr(S["house"][i], S["street"][i], S["city"][i])
-            sale_row.append([a, c, str(S["sale_date"][i])[:10], int(S["sale_value"][i]), int(S["sf"][i]),
+            sale_row.append([a, c, str(S["sale_date"][i])[:7 if county == "hennepin" else 10],  # Hennepin records the month only (every row is the 1st)
+                             int(S["sale_value"][i]), int(S["sf"][i]),
                              int(S["yb"][i]) if S["yb"][i] == S["yb"][i] and S["yb"][i] else None,
                              round(float(S["lat"][i]), 5), round(float(S["lon"][i]), 5)])
         local_index = defaultdict(dict)   # zip -> {sale idx -> local idx}
@@ -241,13 +242,17 @@ def build(db, out, counties, sample, today):
     meta["call"] = sum(c["call"] for c in meta["counties"].values())
     meta["backs"] = sum(c["backs"] for c in meta["counties"].values())
     meta["gap_pct"] = {str(p): round(float(np.percentile(g, p)) * 100, 1) for p in (10, 25, 50, 75, 90)} if len(g) else {}
+    # Backtest: homes that sold themselves since Jan 2025 (their own sale is never their own comp).
+    bt = np.array([r[15] / r[10] for rows in by_zip_rows.values() for r in rows if r[10] and r[14] and r[14] >= "2025-01" and r[15]])
+    meta["backtest"] = {"n": int(len(bt)), "median": round(float(np.median(bt)), 3) if len(bt) else None,
+                        "within_10pct": round(float(np.mean(np.abs(bt - 1) <= 0.10)), 3) if len(bt) else None}
     meta["zips"] = len(by_zip_comps)
     meta["shards"] = len(by_zip_rows)
     meta.pop("zip_ppsf", None); meta.pop("zip_sales_n", None)
-    (out / "site/data").mkdir(parents=True, exist_ok=True)
-    (out / "site/data/meta.json").write_text(json.dumps(meta, indent=1))
+    (out / "site/public/data").mkdir(parents=True, exist_ok=True)
+    (out / "site/public/data/meta.json").write_text(json.dumps(meta, indent=1))
     if example:
-        (out / "site/data/example.json").write_text(json.dumps(example))
+        (out / "site/public/data/example.json").write_text(json.dumps(example))
     print(json.dumps({k: v for k, v in meta.items() if k not in ("counties", "rule")}))
     return meta
 

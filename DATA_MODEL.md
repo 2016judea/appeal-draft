@@ -84,3 +84,11 @@ What this product is not: the commercial assessment screen killed 2026-09-24 (th
 assessor passes the IAAO ratio tests in aggregate). This is the per-parcel residential
 tail: the homes whose own EMV sits above what nearby sales of homes like them say, which
 an aggregate ratio study cannot see.
+
+Added 2026-10-19 after the second pass:
+- **Lot size / water frontage: not in the comp rule.** The rule matches sqft, age and distance,
+  so a lake lot or acreage reads low against its comps. Unfilled field: land (`emv_land` exists
+  on the roll; a land-adjusted comp is the next build).
+- **Backtest:** 30,224 homes that sold since 2025-01 (never their own comp): median sale = 1.00×
+  target, 53% within ±10%. `meta.json → backtest`, recomputed per build.
+- **Hennepin sale dates are month-grain** (every row is the 1st): printed as YYYY-MM.

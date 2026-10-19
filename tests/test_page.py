@@ -8,11 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_page_builds_with_analytics_and_price(tmp_path):
-    if not (ROOT / "site/data/meta.json").exists():
+    if not (ROOT / "site/public/data/meta.json").exists():
         import pytest
-        pytest.skip("site/data/meta.json not built")
+        pytest.skip("site/public/data/meta.json not built")
     subprocess.run([sys.executable, str(ROOT / "scripts/build_page.py")], check=True)
-    html = (ROOT / "site/index.html").read_text()
+    html = (ROOT / "site/public/index.html").read_text()
     offer = json.loads((ROOT / "site/offer.json").read_text())
     assert "/_vercel/insights/script.js" in html, "Vercel Web Analytics tag"
     assert "bm-posthog:begin" in html and "phc_" in html, "the shared PostHog block"

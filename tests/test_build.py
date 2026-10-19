@@ -10,7 +10,7 @@ ROW = dict(pk=0, addr=1, city=2, sf=3, yb=4, emv=5, prior=6, tax=7, hs=8, ay=9, 
 
 
 def rows(out):
-    files = sorted((out / "site/data/zip").glob("55104-*.json"))
+    files = sorted((out / "site/public/data/zip").glob("55104-*.json"))
     assert files, "one shard file per zip + house digit"
     homes = {}
     for f in files:
@@ -27,7 +27,7 @@ def test_build_counts_and_meta(built):
     # 5 arm's-length sales: the 2019 one is too old, the $10k one is below the floor
     assert meta["counties"]["ramsey"]["sales"] == 5
     assert meta["counties"]["ramsey"]["assessment_year"] == 2025
-    assert json.loads((out / "site/data/meta.json").read_text())["homes"] == 6
+    assert json.loads((out / "site/public/data/meta.json").read_text())["homes"] == 6
 
 
 def test_free_row_shape_and_headline(built):
@@ -58,10 +58,15 @@ def test_free_slice_holds_exactly_one_comp_and_paid_bundle_holds_them_all(built)
     comps = [bundle["sales"][i] for i in bundle["comps"]["ramsey:1"]]
     assert len(comps) == 5
     assert comps[0][0] == first[0] and comps[0][3] == first[3], "the free comp is the bundle's first"
-    # none of the other four comps' sale lines appear anywhere under site/ (the free slice never leaks paid fields)
-    public = "".join(p.read_text() for p in (out / "site/data").rglob("*.json"))
-    for addr, city, date, price, *_ in comps[1:]:
-        assert f'"{addr}","{city}","{date}",{price}' not in public
+    # The paid slice is each home's comp SET. A sale can be another home's free first comp, so the
+    # test is per home: its free row carries exactly one sale and nothing that indexes the others.
+    for f in (out / "site/public/data/zip").glob("*.json"):
+        d = json.loads(f.read_text())
+        assert "comps" not in d and "sales" not in d, f"{f.name} holds the paid table"
+        for row in d.get("homes", []):
+            nested = [x for x in row if isinstance(x, (list, dict))]
+            assert len(nested) <= 1 and (not nested or len(nested[0]) == 6), f"{row[0]} carries more than one comp"
+    assert not list((out / "site").rglob("*.json.gz")), "no bundle file under the static tree"
 
 
 def test_subject_is_not_its_own_comp(built):
@@ -74,7 +79,7 @@ def test_subject_is_not_its_own_comp(built):
 
 def test_example_is_argue_with_five_comps(built):
     out, _ = built
-    ex = out / "site/data/example.json"
+    ex = out / "site/public/data/example.json"
     if ex.exists():
         e = json.loads(ex.read_text())
         assert set(e) == {"zip", "pk", "shard"}

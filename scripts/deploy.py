@@ -76,8 +76,8 @@ def upload(token, item):
 
 
 def deploy(token):
-    assert (SITE / "index.html").exists(), "run scripts/build_page.py first"
-    assert (SITE / "data/meta.json").exists() and any(BUNDLE.glob("comps/*.json.gz")), "run scripts/build.py first"
+    assert (SITE / "public/index.html").exists(), "run scripts/build_page.py first"
+    assert (SITE / "public/data/meta.json").exists() and any(BUNDLE.glob("comps/*.json.gz")), "run scripts/build.py first"
     paths = [(p, str(p.relative_to(SITE))) for p in sorted(SITE.rglob("*")) if p.is_file() and not any(x in SKIP for x in p.relative_to(SITE).parts)]
     paths += [(p, "api/_full/" + str(p.relative_to(BUNDLE))) for p in sorted(BUNDLE.rglob("*")) if p.is_file()]
     with ThreadPoolExecutor(12) as ex:
@@ -85,7 +85,7 @@ def deploy(token):
     print(f"  {len(files)} files, {sum(f['size'] for f in files):,} bytes")
     c, out = req("POST", f"{API}/v13/deployments?teamId={TEAM}&skipAutoDetectionConfirmation=1&forceNew=1", token,
                  {"name": PROJECT, "project": PROJECT, "target": "production", "files": files,
-                  "projectSettings": {"framework": None, "buildCommand": "echo build", "outputDirectory": ".", "installCommand": "echo skip"}})
+                  "projectSettings": {"framework": None, "buildCommand": "echo build", "outputDirectory": "public", "installCommand": "echo skip"}})
     if c >= 400 or out.get("error"):
         sys.exit(f"create failed: {c} {json.dumps(out.get('error'))}")
     url = out["url"]

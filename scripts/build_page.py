@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Write site/index.html from this template, site/offer.json, site/data/meta.json and data/deadlines.json.
+"""Write site/public/index.html from this template, site/offer.json, site/public/data/meta.json and data/deadlines.json.
 
-The page opens on a real Saint Paul home (site/data/example.json, picked by scripts/build.py) with
+The page opens on a real Saint Paul home (site/public/data/example.json, picked by scripts/build.py) with
 the three numbers already drawn, so a visitor sees the answer before typing. /for/<token>/ is a
 rewrite to this same page; the token's own home comes from /data/for/<token>.json.
 
-Generated output: never hand-edit site/index.html; edit this and re-run.
+Generated output: never hand-edit site/public/index.html; edit this and re-run.
 """
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OFFER = json.loads((ROOT / "site/offer.json").read_text())
-META = json.loads((ROOT / "site/data/meta.json").read_text())
+META = json.loads((ROOT / "site/public/data/meta.json").read_text())
 DEAD = json.loads((ROOT / "data/deadlines.json").read_text())
 POSTHOG = (ROOT / "scripts/posthog_snippet.html").read_text().replace("__SITE__", OFFER["product"])
 
@@ -91,6 +91,7 @@ details summary{cursor:pointer;color:var(--muted);font-size:14px}
 <div class="eyebrow">Twin Cities · your home's assessed value, checked against recorded sales</div>
 <h1>Is the county's number for your home too high? Here is what to argue for.</h1>
 <p class="lede">Type your address. You get the county's value next to what homes like yours actually sold for, the one number to ask the board for, and the one-page appeal to hand them.</p>
+<p class="hint" id="nextwin">Next appeal window: notices go out __NEXT_NOTICES__, local boards meet __NEXT_BOARDS__.</p>
 <form class="find" id="find">
  <input id="addr" placeholder="Street address, e.g. 1234 Maple St" autocomplete="street-address" aria-label="Street address">
  <input id="zip" placeholder="ZIP" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="postal-code" aria-label="ZIP">
@@ -163,7 +164,7 @@ function render(){const {zip,row,zipdata}=CUR;const [pk,addr,city,sf,yb,emv0,pri
  if(old){$("ovGo").onclick=()=>{const v=parseInt(String($("ov").value).replace(/[^0-9]/g,""),10);OVERRIDE=v>20000?v:null;track("override_value",{set:!!OVERRIDE});render()}}
  const zp=zipdata.ppsf,zv=zp?Math.round(zp*sf/100)*100:null;
  $("vT").textContent=money(target);$("howT").textContent=target?`median $${Math.round(ppsf)}/sq ft across ${ncomps} sales of homes like yours, × your ${sf.toLocaleString("en-US")} sq ft`:`fewer than 3 sales of homes like yours within 2 miles since ${META.sales_since.slice(0,7)}`;
- $("vZ").textContent=money(zv);$("howZ").textContent=zv?`median $${Math.round(zp)}/sq ft over ${zipdata.n_sales.toLocaleString("en-US")} sales in ${zip} since ${new Date(META.sales_since).toLocaleDateString("en-US",{month:"short",year:"numeric"})}, × your sq ft`:`fewer than 10 qualifying sales in ${zip}`;
+ $("vZ").textContent=money(zv);$("howZ").textContent=zv?`median $${Math.round(zp)}/sq ft over ${zipdata.n_sales.toLocaleString("en-US")} sales in ${zip} since ${new Date(META.sales_since+"T12:00").toLocaleDateString("en-US",{month:"short",year:"numeric"})}, × your sq ft`:`fewer than 10 qualifying sales in ${zip}`;
  const max=Math.max(emv,target||0,zv||0);$("bars").innerHTML=bar("county",emv,max,"var(--assessor)")+(target?bar("homes like yours",target,max,"var(--target)"):"")+(zv?bar("your ZIP",zv,max,"var(--sales)"):"");
  let kind="none",gap=null;if(target){gap=emv/target-1;kind=gap<0.03?"backs":gap<0.10?"call":"argue"}
  const V=$("verdict");V.className="verdict "+kind;
@@ -172,18 +173,18 @@ function render(){const {zip,row,zipdata}=CUR;const [pk,addr,city,sf,yb,emv0,pri
  $("tax").textContent=saving?`About $${saving.toLocaleString("en-US")} a year in property tax at today's rate (your bill is $${tax.toLocaleString("en-US")}), every year the lower value holds.`:(tax?`Your bill this year is $${tax.toLocaleString("en-US")}.`:"");
  if(ownD&&ownP)$("tax").textContent+=` You bought it ${ownD.slice(0,7)} for ${money(ownP)}.`;
  const body=$("compBody");body.innerHTML="";
- if(first){body.innerHTML=compRow({addr:first[0],city:first[1],date:first[2],price:first[3],sf:first[4],miles:first[5]});for(let i=1;i<ncomps;i++)body.innerHTML+=`<tr class="lock"><td>comp ${i+1} · unlocks with the letter</td><td>—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>`}
+ if(first){body.innerHTML=compRow({addr:first[0],city:first[1],date:first[2],price:first[3],sf:first[4],miles:first[5]});if(ncomps>1)body.innerHTML+=`<tr class="lock"><td colspan="5">+ ${ncomps-1} more sales like it · unlock with the letter</td></tr>`}
  $("comps").hidden=!first;$("lock").hidden=!target;$("letterwrap").hidden=true;
  $("window").innerHTML=windowHtml(county,ay);
  if(PW&&target)unlock(PW,"stored")}
-function windowHtml(county,ay){const c=DEAD.counties[county],n=DEAD.statewide.next;return `<ol class="steps">${c.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="hint">Last cycle, ${esc(c.last_cycle)} Assessor: ${esc(c.assessor_phone)}. <a href="${esc(c.url)}" rel="noopener">County page</a>, read ${esc(c.read_on)}.</p><p><b>As of ${new Date(META.built).toLocaleDateString("en-US",{month:"long",year:"numeric"})}:</b> the boards for the 2026 value have closed. A Tax Court petition on the 2026 value is open until <b>${esc(n.tax_court_for_2026_value)}</b> (homesteads can use the Small Claims Division). The next board window opens with the <b>${esc(n.notices)}</b> notice: local boards ${esc(n.local_boards)}, county boards ${esc(n.county_boards)}. ${ay<2026?"The 2025 value shown here could only be appealed until April 30, 2026; use the letter for your 2026 or 2027 notice.":""}</p>`}
+function windowHtml(county,ay){const c=DEAD.counties[county],n=DEAD.statewide.next;return `<ol class="steps">${c.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="hint">Last cycle, ${esc(c.last_cycle)} Assessor: ${esc(c.assessor_phone)}. <a href="${esc(c.url)}" rel="noopener">County page</a>, read ${esc(c.read_on)}.</p><p><b>As of ${new Date(META.built+"T12:00").toLocaleDateString("en-US",{month:"long",year:"numeric"})}:</b> the boards for the 2026 value have closed. A Tax Court petition on the 2026 value is open until <b>${esc(n.tax_court_for_2026_value)}</b> (homesteads can use the Small Claims Division). The next board window opens with the <b>${esc(n.notices)}</b> notice: local boards ${esc(n.local_boards)}, county boards ${esc(n.county_boards)}. ${ay<2026?"The 2025 value shown here could only be appealed until April 30, 2026; use the letter for your 2026 or 2027 notice.":""}</p>`}
 function letterHtml(comps){const {zip,row,zipdata}=CUR;const [pk,addr,city,sf,yb,emv0,prior,tax,hs,ay,target,ppsf,ncomps,first,ownD,ownP,pin]=row;const emv=OVERRIDE||emv0;const c=DEAD.counties[zipdata.county];
  const med=comps.map(x=>x.price/x.sf).sort((a,b)=>a-b);const m=med.length%2?med[(med.length-1)/2]:(med[med.length/2-1]+med[med.length/2])/2;const ask=Math.round(m*sf/100)*100;const gap=emv/ask-1;const yr=OVERRIDE?2026:ay;
  return `<h2>Request for review of estimated market value</h2><p class="meta">${yr} assessment · ${esc(c.name.split(" (")[0])} · ${new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</p>
 <p>To: ${esc(c.name.split(" (")[0])} Assessor's Office and the Local Board of Appeal and Equalization, ${esc(city)}</p>
 <p><b>Property:</b> ${esc(addr)}, ${esc(city)}, MN ${esc(zip)} &nbsp; <b>PID:</b> ${esc(pin)}<br><b>Owner:</b> <span class="fill" contenteditable="true">&nbsp;</span> &nbsp; <b>Phone or email:</b> <span class="fill" contenteditable="true">&nbsp;</span></p>
 <p><b>Current estimated market value:</b> ${money(emv)}<br><b>Requested estimated market value:</b> ${money(ask)}</p>
-<p><b>Basis.</b> The ${comps.length} most comparable recorded arm's-length sales since ${new Date(META.sales_since).toLocaleDateString("en-US",{month:"long",year:"numeric"})}: homes within 25% of this home's ${sf.toLocaleString("en-US")} finished square feet and 25 years of its ${yb||""} build year, within two miles, from county records.</p>
+<p><b>Basis.</b> The ${comps.length} most comparable recorded arm's-length sales since ${new Date(META.sales_since+"T12:00").toLocaleDateString("en-US",{month:"long",year:"numeric"})}: homes within 25% of this home's ${sf.toLocaleString("en-US")} finished square feet and 25 years of its ${yb||""} build year, within two miles, from county records.</p>
 <table><thead><tr><th>Address</th><th>Sold</th><th class="r">Price</th><th class="r">Sq ft</th><th class="r">$/sq ft</th></tr></thead><tbody>${comps.map(x=>`<tr><td>${esc(x.addr)}, ${esc(x.city)}</td><td>${esc(x.date)}</td><td class="r">${money(x.price)}</td><td class="r">${x.sf.toLocaleString("en-US")}</td><td class="r">$${(x.price/x.sf).toFixed(0)}</td></tr>`).join("")}</tbody></table>
 <p>Median ${money(m).replace(/\$/,"$")}${""}/sq ft × ${sf.toLocaleString("en-US")} sq ft = <b>${money(ask)}</b>. The current value is ${pct(gap)} ${gap>=0?"above":"below"} what these sales support${ownD&&ownP?`; the property itself sold ${ownD.slice(0,7)} for ${money(ownP)}`:""}. I ask the Board to set the ${yr} estimated market value at ${money(ask)}.</p>
 <p style="margin-top:22px">Signature: <span class="fill" style="min-width:18em">&nbsp;</span> &nbsp; Date: <span class="fill" contenteditable="true">&nbsp;</span></p>
@@ -213,8 +214,8 @@ async function load(pk,zip,sh){const zd=await zipData(zip,sh);const row=zd.homes
  let ex=null;if(TOKEN){try{const r=await fetch(`/data/for/${TOKEN}.json`);if(r.ok){ex=await r.json();VARIANT=ex.variant||""}}catch(e){}}
  if(!ex){try{ex=await (await fetch("/data/example.json")).json()}catch(e){}}
  if(qpk&&/^[a-z]+:[A-Za-z0-9-]+$/.test(qpk)&&u.get("zip")&&u.get("sh")){ex={pk:qpk,zip:u.get("zip"),shard:u.get("sh")}}
- $("mCounties").textContent=Object.values(META.counties).map(c=>`${c.name}: ${c.assessment_year}`).join("; ");$("mSince").textContent=new Date(META.sales_since).toLocaleDateString("en-US",{month:"long",year:"numeric"});$("mBuilt").textContent=META.built;
- $("mCounts").textContent=`Across ${META.homes.toLocaleString("en-US")} homes and ${META.sales.toLocaleString("en-US")} sales, the county sits 10% or more above the comparable sales on ${Math.round(META.argue/META.homes*100)}% of homes, and the sales back the county on ${Math.round(META.backs/META.homes*100)}%.`;
+ $("mCounties").textContent=Object.values(META.counties).map(c=>`${c.name}: ${c.assessment_year}`).join("; ");$("mSince").textContent=new Date(META.sales_since+"T12:00").toLocaleDateString("en-US",{month:"long",year:"numeric"});$("mBuilt").textContent=META.built;
+ $("mCounts").textContent=`Across ${META.homes.toLocaleString("en-US")} homes and ${META.sales.toLocaleString("en-US")} sales, the county sits 10% or more above the comparable sales on ${Math.round(META.argue/META.homes*100)}% of homes, and the sales back the county on ${Math.round(META.backs/META.homes*100)}%.`+(META.backtest&&META.backtest.n?` Checked against ${META.backtest.n.toLocaleString("en-US")} homes that sold themselves since January 2025 (a home is never its own comp): ${Math.round(META.backtest.within_10pct*100)}% sold within 10% of this number, so treat a gap under 10% as a phone call, not a fight.`:"");
  try{if(ex&&ex.pk&&ex.zip)await load(ex.pk,ex.zip,ex.shard||"0")}catch(e){}
  if(pw){await unlock(pw,"link")}
  if(sid){const r=await fetch("/api/session-status?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.paid){track("paid");if(j.password){await unlock(j.password,"paid");$("pwMsg").textContent=`Paid. Your password is ${j.password}; it is also in the email and the Stripe receipt sent to ${j.email||"you"}.`}}}
@@ -223,11 +224,11 @@ async function load(pk,zip,sh){const zd=await zipData(zip,sh);const row=zd.homes
 
 
 def main():
-    html = (TEMPLATE.replace("__POSTHOG__", POSTHOG).replace("__PRICE__", str(OFFER["price_usd"]))
+    html = (TEMPLATE.replace("__POSTHOG__", POSTHOG).replace("__PRICE__", str(OFFER["price_usd"])).replace("__NEXT_NOTICES__", DEAD["statewide"]["next"]["notices"]).replace("__NEXT_BOARDS__", DEAD["statewide"]["next"]["local_boards"])
             .replace("__OFFER__", json.dumps({k: OFFER[k] for k in ("product", "name", "price_usd", "stripe_pk")}))
             .replace("__META__", json.dumps(META, separators=(",", ":"))).replace("__DEAD__", json.dumps(DEAD, separators=(",", ":"))))
-    (ROOT / "site/index.html").write_text(html)
-    print(f"wrote site/index.html ({len(html):,} bytes)")
+    (ROOT / "site/public/index.html").write_text(html)
+    print(f"wrote site/public/index.html ({len(html):,} bytes)")
 
 
 if __name__ == "__main__":

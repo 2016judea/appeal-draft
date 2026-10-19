@@ -4,7 +4,7 @@ outreach/
 private/
 data/zip/
 data/for/
-site/data/
+site/public/data/
 site/for/
 __pycache__/
 .venv/
