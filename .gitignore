@@ -1,0 +1,13 @@
+.env
+.access_secret
+outreach/
+private/
+data/zip/
+data/for/
+site/data/
+site/for/
+__pycache__/
+.venv/
+node_modules/
+*.log
+.DS_Store
