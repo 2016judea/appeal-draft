@@ -26,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import model as M  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-DB = Path.home() / "Desktop/bricks/data/closed_system.duckdb"
+DB = Path.home() / "Desktop/workspace/bricks/data/closed_system.duckdb"
 
 # Which snapshot vintage is "now" per county, and which use classes are a house or townhouse.
 VINTAGE = {"ramsey": "metrogis_current", "anoka": "metrogis_current", "dakota": "metrogis_current",

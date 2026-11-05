@@ -11,7 +11,7 @@ Segments (README "## Distribution"):
             own row = the house of theirs the county values highest above its comps.
   appeal_service  MN firms that file residential appeals; no home of their own in the data, so
             every row is status=hold (scripts note why). Filled by hand into candidates.json.
-Dedupe against ~/Desktop/outreach-ledger/outreach.duckdb `contacted` is done here, not later.
+Dedupe against ~/Desktop/workspace/outreach-ledger/outreach.duckdb `contacted` is done here, not later.
 Nothing is sent.
 """
 import json, re, sys
@@ -23,9 +23,9 @@ import duckdb
 ROOT = Path(__file__).resolve().parent.parent
 ZIP = ROOT / "site/public/data/zip"
 OUT = ROOT / "outreach/round1"
-MSP = Path.home() / "Desktop/msp-house-index/data/listings_raw.jsonl"
-DB = Path.home() / "Desktop/bricks/data/closed_system.duckdb"
-LEDGER = Path.home() / "Desktop/outreach-ledger/outreach.duckdb"
+MSP = Path.home() / "Desktop/workspace/msp-house-index/data/listings_raw.jsonl"
+DB = Path.home() / "Desktop/workspace/bricks/data/closed_system.duckdb"
+LEDGER = Path.home() / "Desktop/workspace/outreach-ledger/outreach.duckdb"
 F = dict(pk=0, addr=1, city=2, sf=3, yb=4, emv=5, prior=6, tax=7, hs=8, ay=9, target=10, ppsf=11, n=12, first=13)
 
 _shards = {}

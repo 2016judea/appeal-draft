@@ -64,7 +64,7 @@ with the county's fields and dates, the PDF.
 
 ## Reality check (filled in after opening the data, same day)
 
-Source: `~/Desktop/bricks/data/closed_system.duckdb`, read-only. `parcel_snapshot`
+Source: `~/Desktop/workspace/bricks/data/closed_system.duckdb`, read-only. `parcel_snapshot`
 (assessor rolls by `mkt_year`; vintage `metrogis_current` for the suburbs, Minneapolis
 assessor files for Hennepin), `sale`, `address_index`.
 

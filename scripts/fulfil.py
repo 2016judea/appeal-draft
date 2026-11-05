@@ -6,7 +6,7 @@
     python3 scripts/fulfil.py --comp             # a $0 checkout link that unlocks like a paid one (end-to-end test)
     python3 scripts/fulfil.py --comp-password X  # a comp password with no Stripe session (label X), for QA
 
-Reads STRIPE_SECRET_KEY from ~/Desktop/bricks/.env and ACCESS_SECRET from ./.access_secret.
+Reads STRIPE_SECRET_KEY from ~/Desktop/workspace/bricks/.env and ACCESS_SECRET from ./.access_secret.
 """
 import hashlib, hmac, json, secrets, sys
 from pathlib import Path
@@ -27,7 +27,7 @@ def env(path, key):
 
 
 def stripe(path, **form):
-    key = env("~/Desktop/bricks/.env", "STRIPE_SECRET_KEY")
+    key = env("~/Desktop/workspace/bricks/.env", "STRIPE_SECRET_KEY")
     data = urllib.parse.urlencode(form).encode() if form else None
     r = urllib.request.Request(f"https://api.stripe.com/v1/{path}", data=data, headers={"Authorization": f"Bearer {key}"})
     try:
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     elif arg == "--comp":
         coupon = "APPEAL-DRAFT-COMP"
         try:
-            urllib.request.urlopen(urllib.request.Request(f"https://api.stripe.com/v1/coupons/{coupon}", headers={"Authorization": f"Bearer {env('~/Desktop/bricks/.env', 'STRIPE_SECRET_KEY')}"}))
+            urllib.request.urlopen(urllib.request.Request(f"https://api.stripe.com/v1/coupons/{coupon}", headers={"Authorization": f"Bearer {env('~/Desktop/workspace/bricks/.env', 'STRIPE_SECRET_KEY')}"}))
         except urllib.error.HTTPError:
             stripe("coupons", id=coupon, percent_off=100, duration="once", name="Appeal Draft comp")
         nonce = "".join(secrets.choice(ALPHA) for _ in range(5))

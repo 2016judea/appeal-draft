@@ -1,4 +1,4 @@
-PY=/Users/aidan/Desktop/bricks/.venv/bin/python
+PY=/Users/aidan/Desktop/workspace/bricks/.venv/bin/python
 # Data from closed_system.duckdb (read-only, ~2 min), then the page, then tests, then Vercel.
 build:
 	caffeinate -i $(PY) scripts/build.py

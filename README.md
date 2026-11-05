@@ -52,10 +52,10 @@ day 3: visits, checkout_open, paid and replies, by variant, by segment and poole
     make build    # closed_system.duckdb (read-only) -> site/public/data + private/bundle, then the page
     make test     # pytest + node handler tests, logs/*.log
     make serve    # localhost:4321 with the API handlers
-    set -a; . ~/Desktop/bricks/.env; set +a; make deploy
+    set -a; . ~/Desktop/workspace/bricks/.env; set +a; make deploy
 
 Only `site/public/` is served statically. The paid comp sets ride up as `api/_full/`, bundled
-with `/api/data` and never under a public URL. Webhook goes through `~/Desktop/stripe-router`.
+with `/api/data` and never under a public URL. Webhook goes through `~/Desktop/workspace/stripe-router`.
 `scripts/fulfil.py` reprints a lost password or mints a comp one.
 
 MIT licence for the code. The data is public record from the county assessors and recorded

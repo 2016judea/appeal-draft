@@ -5,7 +5,7 @@
   python3 scripts/deploy.py           # deploy site/ + private/bundle/ (as api/_full/), wait for READY
 
 Needs VERCEL_TOKEN, STRIPE_SECRET_KEY, MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_FROM in the environment
-(`set -a; . ~/Desktop/bricks/.env; set +a`). ACCESS_SECRET is generated once into .access_secret (gitignored).
+(`set -a; . ~/Desktop/workspace/bricks/.env; set +a`). ACCESS_SECRET is generated once into .access_secret (gitignored).
 The paid comp sets ride up as api/_full/comps/*.json.gz, bundled with /api/data and redirected away from
 any public URL by site/vercel.json.
 """
