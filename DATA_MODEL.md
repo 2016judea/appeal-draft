@@ -92,3 +92,38 @@ Added 2026-10-19 after the second pass:
 - **Backtest:** 30,224 homes that sold since 2025-01 (never their own comp): median sale = 1.00×
   target, 53% within ±10%. `meta.json → backtest`, recomputed per build.
 - **Hennepin sale dates are month-grain** (every row is the 1st): printed as YYYY-MM.
+
+## Added 2026-11-19: the connector answer and the area ratio
+
+Written from the need first: a homeowner asks an assistant "is my assessment too high, should I
+appeal?" and the assistant must answer from the record, then hand over a link that opens the page.
+
+### Connector answer (one per address)
+| field | question it answers |
+|---|---|
+| home: address, county, PID, sqft, built, homestead | is this my house, and which board |
+| county value, its assessment year, prior year, change | the number I'd argue against, and which notice it is |
+| value from my newer notice (optional, typed by me) | compare the value I actually got, not an older roll |
+| what similar sales say (target), how, one comp | the number to ask for, and why |
+| ZIP market value | the market around me in general |
+| gap, verdict, yearly tax saving | is it worth my time |
+| how reliable (backtest) | how far to trust the green number |
+| my area's assessment ratio (ZIP, city, county) | is my county high here in general |
+| dates: notices, local board, county board, Tax Court, each with source | when do I act |
+| link that opens the page filled in | where to see it drawn out and get the letter |
+
+### Area ratio (one per county, city, ZIP, price tier)
+| field | question it answers |
+|---|---|
+| n sales, sales window, value year | how much evidence, and which value |
+| share valued above sale price, its margin | how often the county is above the market here |
+| median ratio | how high the county runs overall here |
+| COD, PRD, PRB (county) | is it uniform, and does it lean on cheaper homes |
+
+### Reality check
+Every field filled from the existing shards, `meta.json`, `data/deadlines.json` and a new read of
+`sale` × `parcel_snapshot` (`scripts/build_ratio.py`). Two limits, both said in the output:
+Ramsey, Anoka and Minneapolis values are the 2025 roll (the 2026 notices are not in the store,
+hence the optional notice value), and areas under 30 sales get no ratio. The 2027 board dates are
+the statewide rules and the DOR's 2027 instructions; each county prints its own meeting date on
+the March notice, which no source publishes before then.

@@ -1,0 +1,234 @@
+# Appeal Draft
+
+> Is my Twin Cities property tax assessment too high, and should I appeal? Appeal Draft compares the county's value on a home with recorded sales of homes like it, says whether an appeal looks worth filing, and gives the dates. Houses and townhouses in Ramsey, Anoka, Dakota, Scott and Washington counties and the City of Minneapolis.
+
+- [Check one home](https://appeal-draft.vercel.app/): type an address; the county's value, what similar sales say, the gap.
+- [Assessment ratio by ZIP and city](https://appeal-draft.vercel.app/assessment-ratio/): county value / sale price for 17,606 sales; 31% were valued above their price.
+- [MCP connector](https://appeal-draft.vercel.app/mcp): Streamable HTTP, no auth. Tools: check_property_assessment, property_tax_appeal_dates, assessment_ratio_by_area.
+- [Full numbers](https://appeal-draft.vercel.app/llms-full.txt)
+
+## Dates (2027 cycle, read 2026-11-19)
+- Valuation notices: March 2027, at least 10 days before the local board or open book meeting.
+- Local boards / open book: April 1 to May 31, 2027.
+- County boards: June 2027, any day after Friday, June 11, 2027.
+- Minnesota Tax Court: April 30, 2027 for the 2026 value; April 30, 2028 for the 2027 value.
+
+## Assessment ratio method
+
+Ratio = county estimated market value / recorded sale price. Houses and townhouses, no condos. Trim 0.5-2.0. Built 2026-11-19.
+Each county's value (as of Jan 2 of its value year) is tested against sales from Oct 1 before it to Jun 30 after it, none of which went into that value.
+
+## By county
+
+county | value year | sales | share valued above sale price | median ratio | COD | PRD | PRB
+--- | --- | --- | --- | --- | --- | --- | ---
+Ramsey | 2025 | 4432 | 37% | 0.978 | 10.7 | 1.025 | -0.051
+Anoka | 2025 | 3396 | 29% | 0.959 | 8.3 | 1.016 | -0.046
+Dakota | 2026 | 3170 | 28% | 0.951 | 7.9 | 1.011 | -0.015
+Scott | 2026 | 1355 | 34% | 0.966 | 9.4 | 1.017 | -0.026
+Washington | 2026 | 2548 | 27% | 0.952 | 10.0 | 1.024 | -0.058
+Hennepin (Minneapolis only) | 2025 | 2705 | 30% | 0.922 | 15.1 | 1.027 | -0.037
+
+## By ZIP (30+ sales)
+
+zip | city | sales | share valued above sale price (90% margin) | median ratio
+--- | --- | --- | --- | ---
+55101 | Saint Paul | 45 | 73% (±11) | 1.044
+55005 | East Bethel | 38 | 60% (±13) | 1.009
+55092 | East Bethel | 31 | 48% (±15) | 0.995
+55130 | Saint Paul | 90 | 47% (±9) | 0.991
+55103 | Saint Paul | 82 | 46% (±9) | 0.991
+55404 | Minneapolis | 40 | 45% (±13) | 0.955
+55414 | Minneapolis | 51 | 43% (±11) | 0.959
+55109 | Maplewood | 286 | 42% (±5) | 0.991
+55113 | Roseville | 366 | 42% (±4) | 0.982
+55352 | Jordan | 76 | 41% (±9) | 0.973
+55119 | Saint Paul | 324 | 40% (±4) | 0.984
+55121 | Eagan | 40 | 40% (±13) | 0.965
+55306 | Burnsville | 94 | 39% (±8) | 0.964
+55011 | East Bethel | 89 | 39% (±8) | 0.976
+55117 | Saint Paul | 358 | 39% (±4) | 0.980
+55104 | Saint Paul | 339 | 38% (±4) | 0.979
+55110 | White Bear Lake | 352 | 38% (±4) | 0.977
+55416 | Minneapolis | 42 | 38% (±12) | 0.968
+55112 | New Brighton | 313 | 38% (±4) | 0.975
+55372 | Prior Lake | 314 | 37% (±4) | 0.977
+55102 | Saint Paul | 184 | 37% (±6) | 0.964
+55070 | Saint Francis | 82 | 37% (±9) | 0.983
+55379 | Shakopee | 458 | 36% (±4) | 0.969
+55421 | Columbia Heights | 235 | 36% (±5) | 0.960
+55303 | Ramsey | 584 | 36% (±3) | 0.974
+55411 | Minneapolis | 235 | 36% (±5) | 0.906
+55405 | Minneapolis | 99 | 35% (±8) | 0.947
+55082 | Stillwater | 251 | 35% (±5) | 0.952
+55413 | Minneapolis | 75 | 35% (±9) | 0.958
+55412 | Minneapolis | 310 | 34% (±4) | 0.927
+55128 | Oakdale | 240 | 33% (±5) | 0.961
+55127 | Vadnais Heights | 245 | 33% (±5) | 0.973
+55107 | Saint Paul | 127 | 33% (±7) | 0.957
+55106 | Saint Paul | 433 | 33% (±4) | 0.962
+55105 | Saint Paul | 238 | 33% (±5) | 0.962
+55108 | Saint Paul | 95 | 33% (±8) | 0.966
+55077 | Inver Grove Heights | 81 | 32% (±8) | 0.952
+55408 | Minneapolis | 128 | 32% (±7) | 0.955
+55042 | Lake Elmo | 176 | 32% (±6) | 0.958
+55126 | Shoreview | 290 | 31% (±4) | 0.974
+55054 | Elko New Market | 48 | 31% (±11) | 0.947
+56011 | Belle Plaine | 77 | 31% (±9) | 0.970
+55071 | Saint Paul Park | 45 | 31% (±11) | 0.930
+55304 | Andover | 413 | 31% (±4) | 0.961
+55122 | Eagan | 223 | 30% (±5) | 0.961
+55024 | Farmington | 304 | 30% (±4) | 0.959
+55418 | Minneapolis | 244 | 30% (±5) | 0.916
+55432 | Fridley | 241 | 30% (±5) | 0.955
+55076 | Inver Grove Heights | 148 | 30% (±6) | 0.962
+55044 | Lakeville | 543 | 29% (±3) | 0.958
+55378 | Savage | 250 | 29% (±5) | 0.959
+55038 | Hugo | 334 | 29% (±4) | 0.954
+55430 | Minneapolis | 70 | 29% (±9) | 0.913
+55434 | Blaine | 243 | 28% (±5) | 0.962
+55337 | Burnsville | 315 | 28% (±4) | 0.955
+55406 | Minneapolis | 324 | 28% (±4) | 0.920
+55410 | Minneapolis | 197 | 28% (±5) | 0.917
+55075 | South Saint Paul | 144 | 28% (±6) | 0.936
+55116 | Saint Paul | 249 | 28% (±5) | 0.972
+55409 | Minneapolis | 174 | 28% (±6) | 0.922
+56071 | New Prague | 51 | 28% (±10) | 0.933
+55123 | Eagan | 152 | 27% (±6) | 0.941
+55115 | Mahtomedi | 83 | 26% (±8) | 0.928
+55118 | West Saint Paul | 187 | 26% (±5) | 0.928
+55125 | Woodbury | 302 | 26% (±4) | 0.954
+55068 | Rosemount | 305 | 26% (±4) | 0.953
+55016 | Cottage Grove | 475 | 26% (±3) | 0.954
+55014 | Lino Lakes | 221 | 25% (±5) | 0.951
+55407 | Minneapolis | 255 | 25% (±4) | 0.910
+55417 | Minneapolis | 292 | 25% (±4) | 0.904
+55124 | Apple Valley | 376 | 23% (±4) | 0.945
+55433 | Coon Rapids | 295 | 22% (±4) | 0.949
+55025 | Forest Lake | 242 | 22% (±4) | 0.942
+55129 | Woodbury | 399 | 21% (±3) | 0.954
+55419 | Minneapolis | 147 | 21% (±6) | 0.913
+55448 | Coon Rapids | 292 | 21% (±4) | 0.956
+55033 | Hastings | 227 | 20% (±4) | 0.934
+55020 | Elko New Market | 58 | 17% (±8) | 0.925
+55449 | Blaine | 440 | 14% (±3) | 0.949
+
+## By city (30+ sales)
+
+city | county | sales | share valued above sale price | median ratio
+--- | --- | --- | --- | ---
+Linwood Township | Anoka | 36 | 53% | 1.007
+East Bethel | Anoka | 92 | 51% | 1.002
+North Saint Paul | Ramsey | 120 | 44% | 0.991
+White Bear Township | Ramsey | 102 | 44% | 0.980
+West Lakeland Township | Washington | 30 | 43% | 0.983
+Roseville | Ramsey | 325 | 42% | 0.983
+New Brighton | Ramsey | 171 | 42% | 0.985
+Little Canada | Ramsey | 111 | 41% | 0.989
+Maplewood | Ramsey | 329 | 40% | 0.986
+Jordan | Scott | 63 | 40% | 0.968
+Anoka | Anoka | 129 | 40% | 0.970
+Prior Lake | Scott | 270 | 38% | 0.980
+White Bear Lake | Ramsey | 219 | 38% | 0.982
+Vadnais Heights | Ramsey | 158 | 37% | 0.978
+Oak Grove | Anoka | 75 | 37% | 0.969
+Mounds View | Ramsey | 94 | 37% | 0.968
+Credit River | Scott | 35 | 37% | 0.976
+Shakopee | Scott | 444 | 37% | 0.972
+Ham Lake | Anoka | 115 | 36% | 0.978
+Saint Paul | Ramsey | 2304 | 36% | 0.975
+Saint Francis | Anoka | 83 | 36% | 0.983
+New Prague | Scott | 39 | 36% | 0.955
+Falcon Heights | Ramsey | 34 | 35% | 0.962
+Columbia Heights | Anoka | 180 | 35% | 0.952
+Circle Pines | Anoka | 43 | 35% | 0.958
+Ramsey | Anoka | 418 | 34% | 0.975
+Oakdale | Washington | 238 | 33% | 0.961
+Belle Plaine | Scott | 73 | 33% | 0.976
+Lake Elmo | Washington | 174 | 32% | 0.956
+Shoreview | Ramsey | 287 | 31% | 0.974
+Saint Paul Park | Washington | 42 | 31% | 0.922
+Burnsville | Dakota | 409 | 31% | 0.956
+Inver Grove Heights | Dakota | 228 | 31% | 0.961
+Fridley | Anoka | 232 | 31% | 0.953
+Farmington | Dakota | 223 | 30% | 0.955
+Lino Lakes | Anoka | 254 | 30% | 0.961
+Eagan | Dakota | 415 | 30% | 0.954
+Minneapolis | Hennepin | 2705 | 30% | 0.922
+Columbus | Anoka | 34 | 29% | 0.961
+Andover | Anoka | 298 | 29% | 0.958
+Stillwater | Washington | 149 | 29% | 0.938
+Lakeville | Dakota | 611 | 29% | 0.958
+Savage | Scott | 258 | 29% | 0.958
+South Saint Paul | Dakota | 144 | 28% | 0.936
+Mahtomedi | Washington | 80 | 28% | 0.928
+Mendota Heights | Dakota | 70 | 27% | 0.930
+Rosemount | Dakota | 272 | 26% | 0.953
+Cottage Grove | Washington | 478 | 26% | 0.954
+West Saint Paul | Dakota | 129 | 25% | 0.918
+North Oaks | Ramsey | 77 | 25% | 0.969
+Arden Hills | Ramsey | 49 | 24% | 0.942
+Spring Lake Park | Anoka | 37 | 24% | 0.956
+Elko New Market | Scott | 94 | 23% | 0.929
+Woodbury | Washington | 701 | 23% | 0.954
+Hugo | Washington | 190 | 23% | 0.935
+Apple Valley | Dakota | 376 | 23% | 0.945
+Coon Rapids | Anoka | 587 | 22% | 0.952
+Forest Lake | Washington | 210 | 21% | 0.942
+Blaine | Anoka | 724 | 20% | 0.950
+Hastings | Dakota | 197 | 18% | 0.932
+
+## By price tier (share valued above sale price)
+
+county | lowest-priced quarter | highest-priced quarter
+--- | --- | ---
+Ramsey | 49% (median price $200,000) | 29% (median price $545,000)
+Anoka | 35% (median price $259,900) | 24% (median price $575,000)
+Dakota | 28% (median price $265,000) | 29% (median price $604,655)
+Scott | 38% (median price $275,000) | 30% (median price $700,000)
+Washington | 36% (median price $299,000) | 22% (median price $719,140)
+Hennepin | 37% (median price $221,000) | 24% (median price $650,000)
+
+## Appeal steps by county
+
+### Ramsey County
+Assessor: 651-266-2131 · https://www.ramseycountymn.gov/residents/property-home/taxes-values/property-value/appealing-your-value
+- Call the Assessor's Office first (651-266-2131) to talk through the value.
+- Open book meeting (Saint Paul and most suburbs), or your city's Local Board of Appeal and Equalization.
+- County Board of Appeal and Equalization, in June.
+- Minnesota Tax Court by April 30 of the year the taxes are payable.
+
+### Anoka County
+Assessor: 763-323-5400 · https://www.anokacountymn.gov/4279/How-to-Appeal-Your-Value
+- Valuation notices are mailed on or before April 1.
+- Open Book or your city's Local Board of Appeal & Equalization (LBAE). In an LBAE city you must appeal there first to go on to the county board.
+- County Board of Appeal & Equalization (CBAE), in June.
+- Minnesota Tax Court petition before April 30 of the year taxes are payable.
+
+### Dakota County
+Assessor: 651-438-4200 · https://dakotacountymn.gov/residents/home-property/appeal-property-value
+- Appeal option review period with Assessing Services after the notice (2026: March 11 to May 1).
+- Special County Board of Appeal and Equalization in June (2026: June 8). After it adjourns the county cannot change that year's value.
+- Minnesota Tax Court petition, deadline April 30 of the year taxes are payable.
+
+### Scott County
+Assessor: 952-496-8150 · https://www.scottcountymn.gov/358/Assessors-Timeline
+- March: valuation notices mailed.
+- March to May: Open Book or your city's Local Board of Appeal and Equalization.
+- June: County Board of Appeal & Equalization.
+- April 30: Minnesota Tax Court filing deadline (year taxes are payable).
+
+### Washington County
+Assessor: 651-430-6175 · https://www.washingtoncountymn.gov/3076/Appealing-Your-Property-Value
+- Contact your appraiser before any meeting.
+- Local Board of Appeal and Equalization in your city (April), or one of four regional Open Book meetings (April).
+- County Board of Appeal and Equalization in June; call 651-430-6175 by about May 1 for an appointment.
+- Minnesota Tax Court on or before April 30 of the year the taxes are due.
+
+### Hennepin County (Minneapolis)
+Assessor: 612-348-7050 · https://www.minneapolismn.gov/resident-services/property-housing/property-values-taxes/market-value/appeal/
+- Talk to the Minneapolis assessor's office first.
+- Minneapolis Local Board of Appeal and Equalization (LBAE), spring.
+- Hennepin County Board of Appeal and Equalization in June; book by phone (612-348-7050) or countyvalueappeal@hennepin.us by about May 20.
+- Minnesota Tax Court by April 30 of the year the taxes are payable.
+

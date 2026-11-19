@@ -130,7 +130,7 @@ details summary{cursor:pointer;color:var(--muted);font-size:14px}
  <p>The county's value is the estimated market value on the assessor's roll (<span id="mCounties"></span>). "Homes like yours" are recorded arm's-length sales since <span id="mSince"></span> of homes within 25% of your finished square feet and 25 years of your build year, within 2 miles, nearest and most alike first; the green number is their median price per square foot times your square feet. Sales under $50,000, or far off the sold home's own value (outside 0.5 to 2 times), are left out as family transfers or partial interests. Your ZIP's number is the median $/sq ft of every such sale in the ZIP. Prices are not adjusted for time. Condos are not covered. <span id="mCounts"></span></p>
  <p>Minneapolis homes show the 2025 assessment; the other counties show their latest roll. Built <span id="mBuilt"></span> from county assessor and recorder data via <a href="https://brickandmortar.dev">Brick &amp; Mortar</a>.</p>
 </details>
-<footer class="foot">This is a draft for your own appeal, not legal advice. The board decides. Built by <a href="https://brickandmortar.dev">Brick &amp; Mortar</a>, Minneapolis. <a href="https://randomaidan.substack.com">Why we build these</a>.</footer>
+<footer class="foot">This is a draft for your own appeal, not legal advice. The board decides. Built by <a href="https://brickandmortar.dev">Brick &amp; Mortar</a>, Minneapolis. <a href="https://randomaidan.substack.com">Why we build these</a>.<br><a href="/assessment-ratio/">Where the county values homes above their sale price, by ZIP</a> · <a href="/privacy/">Privacy</a> · In Claude or ChatGPT, add the connector <code>https://appeal-draft.vercel.app/mcp</code> and ask "is my property tax assessment too high?"</footer>
 </main>
 <script src="https://js.stripe.com/v3/"></script>
 <script>
@@ -141,7 +141,10 @@ const money=n=>n==null?"—":"$"+Math.round(n).toLocaleString("en-US");
 const pct=x=>Math.round(Math.abs(x)*100)+"%";
 const TOKEN=(location.pathname.match(/^\/for\/([a-z0-9]{4,24})/)||[])[1]||"";
 let VARIANT="";
-const track=(name,data={})=>{data={...data,token:TOKEN,variant:VARIANT};try{window.va("event",{name,data})}catch(e){}try{if(window.posthog&&posthog.capture)posthog.capture(name,data)}catch(e){}};
+// src: where the visit came from (mcp = a link the AI connector handed out). Rides on every event, so the funnel splits by it.
+const SRC=(()=>{try{return (new URLSearchParams(location.search).get("src")||"").replace(/[^a-z0-9_-]/gi,"").slice(0,24)}catch(e){return ""}})();
+try{if(window.posthog&&posthog.register){posthog.register({entry:SRC||"direct"});if(SRC)posthog.register_once({first_src:SRC})}}catch(e){}
+const track=(name,data={})=>{data={...data,token:TOKEN,variant:VARIANT,src:SRC||"direct"};try{window.va("event",{name,data})}catch(e){}try{if(window.posthog&&posthog.capture)posthog.capture(name,data)}catch(e){}};
 let PW=null;try{PW=localStorage.getItem("pw:"+OFFER.product)}catch(e){}
 let CUR=null;   // {zip, row, zipdata}
 let OVERRIDE=null; // the owner typed the value from a newer notice
@@ -217,6 +220,7 @@ async function load(pk,zip,sh){const zd=await zipData(zip,sh);const row=zd.homes
  $("mCounties").textContent=Object.values(META.counties).map(c=>`${c.name}: ${c.assessment_year}`).join("; ");$("mSince").textContent=new Date(META.sales_since+"T12:00").toLocaleDateString("en-US",{month:"long",year:"numeric"});$("mBuilt").textContent=META.built;
  $("mCounts").textContent=`Across ${META.homes.toLocaleString("en-US")} homes and ${META.sales.toLocaleString("en-US")} sales, the county sits 10% or more above the comparable sales on ${Math.round(META.argue/META.homes*100)}% of homes, and the sales back the county on ${Math.round(META.backs/META.homes*100)}%.`+(META.backtest&&META.backtest.n?` Checked against ${META.backtest.n.toLocaleString("en-US")} homes that sold themselves since January 2025 (a home is never its own comp): ${Math.round(META.backtest.within_10pct*100)}% sold within 10% of this number, so treat a gap under 10% as a phone call, not a fight.`:"");
  try{if(ex&&ex.pk&&ex.zip)await load(ex.pk,ex.zip,ex.shard||"0")}catch(e){}
+ const qv=parseInt(u.get("v")||"",10);if(qv>20000&&qv<50000000&&CUR&&qpk){OVERRIDE=qv;render()}
  if(pw){await unlock(pw,"link")}
  if(sid){const r=await fetch("/api/session-status?session_id="+encodeURIComponent(sid));const j=await r.json();if(j.paid){track("paid");if(j.password){await unlock(j.password,"paid");$("pwMsg").textContent=`Paid. Your password is ${j.password}; it is also in the email and the Stripe receipt sent to ${j.email||"you"}.`}}}
  track("preview_open")})();

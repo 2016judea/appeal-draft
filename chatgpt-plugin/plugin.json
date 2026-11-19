@@ -1,0 +1,97 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "appeal-draft",
+  "version": "1.0.0",
+  "description": "Appeal Draft answers \"is my property tax assessment too high, and should I appeal?\" for a home in the Minneapolis-Saint Paul area. Given an address, it returns the county's estimated market value, what recorded sales of similar nearby homes say the home is worth, the gap between them, whether an appeal looks worth filing, about how much a cut would lower the yearly tax, and the county's appeal steps with the 2027 dates for valuation notices, open book and local boards, county boards and the Minnesota Tax Court, each with its official source. It also gives the assessment ratio (county value divided by sale price) by ZIP, city and county: the share of sold homes valued above their sale price, and whether cheaper homes are valued high more often. Every number comes from county assessor rolls and recorded sales; nothing is estimated by the model. Coverage is houses and townhouses in Ramsey, Anoka, Dakota, Scott and Washington counties and the City of Minneapolis; other addresses get a plain 'not covered'. Each answer links to a page that opens the same comparison for that home. All three tools are read-only and need no account.",
+  "author": {
+    "name": "Brick and Mortar AI LLC",
+    "url": "https://brickandmortar.dev/"
+  },
+  "homepage": "https://appeal-draft.vercel.app/",
+  "repository": "https://github.com/2016judea/appeal-draft",
+  "license": "MIT",
+  "keywords": [
+    "property tax",
+    "assessment appeal",
+    "Minnesota",
+    "Minneapolis",
+    "Saint Paul"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Appeal Draft",
+        "shortDescription": "Twin Cities assessment check",
+        "longDescription": "Appeal Draft answers \"is my property tax assessment too high, and should I appeal?\" for a home in the Minneapolis-Saint Paul area. Given an address, it returns the county's estimated market value, what recorded sales of similar nearby homes say the home is worth, the gap between them, whether an appeal looks worth filing, about how much a cut would lower the yearly tax, and the county's appeal steps with the 2027 dates for valuation notices, open book and local boards, county boards and the Minnesota Tax Court, each with its official source. It also gives the assessment ratio (county value divided by sale price) by ZIP, city and county: the share of sold homes valued above their sale price, and whether cheaper homes are valued high more often. Every number comes from county assessor rolls and recorded sales; nothing is estimated by the model. Coverage is houses and townhouses in Ramsey, Anoka, Dakota, Scott and Washington counties and the City of Minneapolis; other addresses get a plain 'not covered'. Each answer links to a page that opens the same comparison for that home. All three tools are read-only and need no account.",
+        "developerName": "Brick and Mortar AI LLC",
+        "category": "Finance",
+        "capabilities": [],
+        "websiteURL": "https://appeal-draft.vercel.app/",
+        "supportURL": "https://brickandmortar.dev/contact",
+        "privacyPolicyURL": "https://appeal-draft.vercel.app/privacy/",
+        "termsOfServiceURL": "https://brickandmortar.dev/license/",
+        "defaultPrompt": [
+          "Is my property tax assessment too high?",
+          "When can I appeal my property value in Minnesota?",
+          "Which Twin Cities ZIPs have the most homes valued above their sale price?"
+        ],
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/composer-icon.png",
+        "composerIconDark": "./assets/composer-icon-dark.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Check whether one covered home's assessment is above what similar sales support.",
+              "prompt": "Is the property tax assessment on 1852 Ashland Ave, St Paul MN 55104 too high? Should I appeal?",
+              "tools_triggered": "check_property_assessment",
+              "expected_behavior": "Returns the county's 2025 value ($616,500), the comparable-sales value ($477,500), a 29% gap, the verdict worth_appealing, the yearly tax saving, the 2027 dates, and a link to the filled-in comparison."
+            },
+            {
+              "description": "A home whose sales back the county's number.",
+              "prompt": "Should I appeal the assessment on 8450 Savanna Oaks Alcove, Woodbury MN?",
+              "tools_triggered": "check_property_assessment",
+              "expected_behavior": "Returns the 2026 value ($451,300) next to the comparable-sales value ($451,500), verdict sales_back_the_county, and says an appeal is unlikely to help."
+            },
+            {
+              "description": "When and how to appeal in one county.",
+              "prompt": "When can I appeal my property value in Hennepin County?",
+              "tools_triggered": "property_tax_appeal_dates",
+              "expected_behavior": "Returns March 2027 notices, local boards April 1 to May 31, 2027, county boards after June 11, 2027, Tax Court April 30, 2027 / 2028, Hennepin's steps and phone, with sources."
+            },
+            {
+              "description": "Whether a county over-assesses homes.",
+              "prompt": "Does Ramsey County over-assess homes?",
+              "tools_triggered": "assessment_ratio_by_area",
+              "expected_behavior": "Returns Ramsey's median ratio, the share of sold homes valued above their price, COD/PRD/PRB, and the cheapest vs. dearest quarter."
+            },
+            {
+              "description": "Whether assessments run high in one ZIP.",
+              "prompt": "Are home assessments too high in ZIP 55104?",
+              "tools_triggered": "assessment_ratio_by_area",
+              "expected_behavior": "Returns 55104's share valued above sale price with its margin, median ratio, rank among ZIPs and the county and metro figures."
+            }
+          ],
+          "negative": [
+            {
+              "description": "An address outside coverage.",
+              "prompt": "Is my assessment too high at 4500 France Ave S, Edina MN?",
+              "expected_behavior": "check_property_assessment says Edina (Hennepin County outside Minneapolis) is not covered and gives no estimate."
+            },
+            {
+              "description": "An address outside Minnesota.",
+              "prompt": "Is the assessment on 1600 Pennsylvania Ave NW, Washington DC too high?",
+              "expected_behavior": "check_property_assessment says the address is not covered; the assistant does not estimate a value."
+            },
+            {
+              "description": "A request to file or send something.",
+              "prompt": "File my appeal with the county for me.",
+              "expected_behavior": "No tool files, sends or submits anything; the assistant explains the steps and dates instead."
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -5,9 +5,24 @@
   "api/data.js": {
    "includeFiles": "api/_full/**",
    "memory": 1024
+  },
+  "api/mcp.js": {
+   "maxDuration": 30
   }
  },
  "rewrites": [
+  {
+   "source": "/mcp",
+   "destination": "/api/mcp"
+  },
+  {
+   "source": "/mcp/",
+   "destination": "/api/mcp"
+  },
+  {
+   "source": "/.well-known/openai-apps-challenge",
+   "destination": "/api/openai-challenge"
+  },
   {
    "source": "/for/:token",
    "destination": "/index.html"

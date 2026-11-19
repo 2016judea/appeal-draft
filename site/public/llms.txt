@@ -1,0 +1,14 @@
+# Appeal Draft
+
+> Is my Twin Cities property tax assessment too high, and should I appeal? Appeal Draft compares the county's value on a home with recorded sales of homes like it, says whether an appeal looks worth filing, and gives the dates. Houses and townhouses in Ramsey, Anoka, Dakota, Scott and Washington counties and the City of Minneapolis.
+
+- [Check one home](https://appeal-draft.vercel.app/): type an address; the county's value, what similar sales say, the gap.
+- [Assessment ratio by ZIP and city](https://appeal-draft.vercel.app/assessment-ratio/): county value / sale price for 17,606 sales; 31% were valued above their price.
+- [MCP connector](https://appeal-draft.vercel.app/mcp): Streamable HTTP, no auth. Tools: check_property_assessment, property_tax_appeal_dates, assessment_ratio_by_area.
+- [Full numbers](https://appeal-draft.vercel.app/llms-full.txt)
+
+## Dates (2027 cycle, read 2026-11-19)
+- Valuation notices: March 2027, at least 10 days before the local board or open book meeting.
+- Local boards / open book: April 1 to May 31, 2027.
+- County boards: June 2027, any day after Friday, June 11, 2027.
+- Minnesota Tax Court: April 30, 2027 for the 2026 value; April 30, 2028 for the 2027 value.

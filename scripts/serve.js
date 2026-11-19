@@ -10,9 +10,10 @@ const port = +process.argv[2] || 4321;
 const types = { ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".css": "text/css", ".svg": "image/svg+xml", ".webp": "image/webp" };
 http.createServer(async (req, res) => {
   const u = url.parse(req.url, true);
-  if (u.pathname.startsWith("/api/")) {
-    const f = path.join(root, "..", "api", path.basename(u.pathname) + ".js");
-    if (!fs.existsSync(f) || path.basename(u.pathname).startsWith("_")) { res.writeHead(404); return res.end(); }
+  if (u.pathname.startsWith("/api/") || u.pathname === "/mcp") {  // /mcp: the rewrite in site/vercel.json
+    const name = u.pathname === "/mcp" ? "mcp" : path.basename(u.pathname);
+    const f = path.join(root, "..", "api", name + ".js");
+    if (!fs.existsSync(f) || name.startsWith("_")) { res.writeHead(404); return res.end(); }
     let body = ""; for await (const c of req) body += c;
     req.query = u.query; try { req.body = body ? JSON.parse(body) : {}; } catch { req.body = {}; }
     res.status = (c) => { res.statusCode = c; return res; };
