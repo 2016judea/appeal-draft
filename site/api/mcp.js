@@ -228,7 +228,7 @@ async function checkAssessment(args, base, log) {
   const SAY = {
     worth_appealing: `Worth appealing. The county's value is ${gap != null ? pctS(gap) : ""} above what recorded sales of similar homes support. Ask the board for ${money(target)}.`,
     worth_a_call: `A little high: ${gap != null ? pctS(gap) : ""} above the sales. Worth a call to the assessor before any board; a gap under 10% is a phone call, not a fight.`,
-    sales_back_the_county: `Sales back the county's number${gap != null && gap < 0 ? ` (it is ${pctS(gap)} under them)` : ""}. An appeal is unlikely to help.`,
+    sales_back_the_county: `Sales back the county's number${gap != null && gap <= -0.005 ? ` (it is ${pctS(gap)} under them)` : ""}. An appeal is unlikely to help.`,
     not_enough_sales: "Fewer than 3 sales of similar homes within 2 miles since July 2024, so there is not enough to say.",
   };
   log.found = true; log.county = county; log.verdict = verdict; log.override = !!override;
