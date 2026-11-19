@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.2016judea/appeal-draft",
+  "title": "Appeal Draft – Twin Cities property tax appeal",
+  "description": "Is my Twin Cities property tax assessment too high? County value vs. recorded sales, when to appeal",
+  "version": "1.0.0",
+  "websiteUrl": "https://appeal-draft.vercel.app/",
+  "repository": {
+    "url": "https://github.com/2016judea/appeal-draft",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://appeal-draft.vercel.app/mcp"
+    }
+  ]
+}
