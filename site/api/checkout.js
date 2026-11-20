@@ -27,6 +27,12 @@ module.exports = async (req, res) => {
         "payment_method_types[1]": "link",
         customer_creation: "always",
         "invoice_creation[enabled]": "true",
+        // The buyer sees Appeal Draft, not the Brick & Mortar account's look (Aidan, 2026-11-20).
+        // Embedded Checkout refuses an icon or logo, so the name and colours are what it carries.
+        "branding_settings[display_name]": "Appeal Draft",
+        "branding_settings[background_color]": "#f7f3ea",
+        "branding_settings[button_color]": "#17150f",
+        "payment_intent_data[statement_descriptor_suffix]": "TAX APPEAL",
         "invoice_creation[invoice_data][description]": name,
         "invoice_creation[invoice_data][custom_fields][0][name]": "Password",
         "invoice_creation[invoice_data][custom_fields][0][value]": password,
